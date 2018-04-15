@@ -63,7 +63,7 @@ def genByTypes(n, fields):
                     .replace('DECIMAL', '')\
                     .replace('(', '')\
                     .replace(')', '')
-                length = length.split('.')
+                length = tuple(map(int, length.split('.')))
                 values[field].append((length[0]-length[1])*str(i) + '.' + length[1]*str(i))
             if 'VARCHAR' in datatype.upper():
                 length = datatype.upper()\
