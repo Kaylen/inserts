@@ -22,16 +22,17 @@ def processTable(table):
     name, *fields = table.split('\n')
     name = name\
         .replace('CREATE TABLE', '')\
+        .replace('IF NOT EXISTS', '')\
         .replace('(', '')\
         .replace(' ', '')
 
     def fieldMap(field):
-        field = field.replace(',', '').split(' ')
+        field = field.split(' ')
         field = tuple(filter(lambda c: c != '', field))
         return (field[0], field[1])
 
     def filterField(field):
-        for k in ['KEY', 'INDEX', 'REFERENCES']:
+        for k in ['KEY', 'INDEX', 'REFERENCES', 'CONSTRAINT', 'ON DELETE', 'ON UPDATE']:
             if k in field:
                 return False
         return len(field)
@@ -63,13 +64,14 @@ def genByTypes(n, fields):
                     .replace('DECIMAL', '')\
                     .replace('(', '')\
                     .replace(')', '')
-                length = tuple(map(int, length.split('.')))
+                length = tuple(map(int, length.split(',')))
                 values[field].append((length[0]-length[1])*str(i) + '.' + length[1]*str(i))
             if 'VARCHAR' in datatype.upper():
                 length = datatype.upper()\
                     .replace('VARCHAR', '')\
                     .replace('(', '')\
-                    .replace(')', '')
+                    .replace(')', '')\
+                    .replace(',', '')
                 length = int(length)
                 if len(field) + len(str(i)) <= length:
                     values[field].append(field + str(i))
@@ -111,10 +113,11 @@ def main(n, filepath):
     tables = []
     start = False
     table = ''
-    for l in lines:
+    for line in lines:
+        l = line.replace('`', '')
         if 'CREATE TABLE' in l:
             start = True
-        if ')ENGINE' in l and start:
+        if 'ENGINE' in l and start:
             tables.append(table)
             start = False
             table = ''
