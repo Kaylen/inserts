@@ -56,8 +56,15 @@ def genByTypes(n, fields):
         for i in range(n):
             if i == 0:
                 values[field] = []
-            if datatype.upper() == 'INT':
+            if 'INT' in datatype.upper():
                 values[field].append(i)
+            if 'DECIMAL' in datatype.upper():
+                length = datatype.upper()\
+                    .replace('DECIMAL', '')\
+                    .replace('(', '')\
+                    .replace(')', '')
+                length = length.split('.')
+                values[field].append((length[0]-length[1])*str(i) + '.' + length[1]*str(i))
             if 'VARCHAR' in datatype.upper():
                 length = datatype.upper()\
                     .replace('VARCHAR', '')\

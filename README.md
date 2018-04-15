@@ -14,6 +14,7 @@ Also, all of the MySQL reserved words should be in UPPERCASE.
 *DATE*
 *VARCHAR*
 *TEXT*
+*DECIMAL*
 
 You need python3.6 to execute this script.
 If you're sure that everything is ok, you can generate the code with the
