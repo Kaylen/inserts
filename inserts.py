@@ -58,14 +58,14 @@ def genByTypes(n, fields):
             if i == 0:
                 values[field] = []
             if 'INT' in datatype.upper():
-                values[field].append(i)
+                values[field].append(i+1)
             if 'DECIMAL' in datatype.upper():
                 length = datatype.upper()\
                     .replace('DECIMAL', '')\
                     .replace('(', '')\
                     .replace(')', '')
                 length = tuple(map(int, length.split(',')))
-                values[field].append((length[0]-length[1])*str(i) + '.' + length[1]*str(i))
+                values[field].append((length[0]-length[1])*str((i+1)%10) + '.' + length[1]*str((i+1)%10))
             if 'VARCHAR' in datatype.upper():
                 length = datatype.upper()\
                     .replace('VARCHAR', '')\
@@ -73,12 +73,12 @@ def genByTypes(n, fields):
                     .replace(')', '')\
                     .replace(',', '')
                 length = int(length)
-                if len(field) + len(str(i)) <= length:
-                    values[field].append(field + str(i))
+                if len(field) + len(str(i+1)) <= length:
+                    values[field].append(field + str(i+1))
                 else:
                     values[field].append(genStr(length))
             if 'TEXT' in datatype.upper():
-                values[field].append(field + str(i))
+                values[field].append(field + str(i+1))
             if 'CHAR(1)' in datatype.upper():
                 values[field].append('A')
             if 'DATE' in datatype.upper():
